@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kontakt – Ozodbek</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { 
+      --bg-dark:#000; 
+      --bg-light:#fff; 
+      --star-color:#ffffff; 
+      --accent-color:#3b82f6;
+      --text-dark:#000; 
+      --text-light:#fff; 
+    }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{
+      background:var(--bg-dark);
+      font-family:'Inter',sans-serif;
+      overflow-x:hidden;
+      transition:background 0.5s, color 0.5s;
+    }
+    .wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      position:relative;
+      padding:20px;
+    }
+
+    h1.title{
+      font-size:clamp(36px,6vw,60px);
+      margin-bottom:20px;
+      color:var(--text-light);
+      text-align:center;
+      transition:color 0.5s;
+      font-weight:800;
+      text-shadow:0 2px 10px rgba(255,255,255,0.1);
+    }
+    p.contact-text{
+      font-size:18px;
+      color:var(--text-light);
+      text-align:center;
+      margin-bottom:40px;
+      transition:color 0.5s;
+      max-width:600px;
+      line-height:1.6;
+    }
+
+    .contact-buttons{
+      display:flex;
+      flex-direction:column;
+      gap:25px;
+      z-index:1;
+    }
+    
+    .contact-button{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      padding:15px 25px;
+      border-radius:50px;
+      background:rgba(255,255,255,0.1);
+      backdrop-filter:blur(10px);
+      transition:all 0.4s;
+      color:var(--text-light);
+      box-shadow:0 8px 25px rgba(0,0,0,0.3);
+      position:relative;
+      overflow:hidden;
+      cursor:pointer;
+      text-decoration:none;
+      width:280px;
+    }
+    
+    .contact-button:before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:var(--button-color);
+      opacity:0;
+      transition:opacity 0.4s;
+      z-index:-1;
+    }
+    
+    .contact-button:hover{
+      transform:translateY(-5px);
+      box-shadow:0 12px 30px rgba(0,0,0,0.4);
+    }
+    
+    .contact-button:hover:before{
+      opacity:0.2;
+    }
+    
+    .contact-button:hover .button-content{
+      transform:translateY(-40px);
+      opacity:0;
+    }
+    
+    .contact-button:hover .button-hover{
+      transform:translateY(0);
+      opacity:1;
+    }
+    
+    .button-content{
+      display:flex;
+      align-items:center;
+      gap:15px;
+      transition:all 0.4s;
+    }
+    
+    .button-hover{
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      transform:translateY(40px);
+      opacity:0;
+      transition:all 0.4s;
+      font-weight:bold;
+    }
+    
+    .contact-button svg{
+      width:28px;
+      height:28px;
+      fill:currentColor;
+      transition:transform 0.3s;
+    }
+    
+    .contact-button:hover svg{
+      transform:rotate(10deg);
+    }
+
+    canvas{
+      position:fixed;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      z-index:-1;
+    }
+    
+    .moon{
+      position:fixed;
+      top:15%;
+      right:15%;
+      width:80px;
+      height:80px;
+      border-radius:50%;
+      background:linear-gradient(135deg, #f5f5f5, #e0e0e0);
+      box-shadow:0 0 40px 10px rgba(255,255,255,0.3);
+      z-index:-1;
+      transition:all 1s ease-in-out;
+      opacity:1;
+    }
+    
+    .sun{
+      position:fixed;
+      top:15%;
+      right:15%;
+      width:100px;
+      height:100px;
+      border-radius:50%;
+      background:radial-gradient(circle, #ffeb3b, #ff9800);
+      box-shadow:0 0 60px 20px rgba(255,152,0,0.5);
+      z-index:-1;
+      transition:all 1s ease-in-out;
+      opacity:0;
+    }
+    
+    .cloud {
+      position: fixed;
+      background: white;
+      border-radius: 1000px;
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    
+    .cloud::before,
+    .cloud::after {
+      content: '';
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+    }
+    
+    .cloud1 {
+      width: 120px;
+      height: 40px;
+      top: 20%;
+      left: -150px;
+      animation: cloudMove1 25s linear infinite;
+    }
+    
+    .cloud1::before {
+      width: 50px;
+      height: 50px;
+      top: -20px;
+      left: 15px;
+    }
+    
+    .cloud1::after {
+      width: 40px;
+      height: 40px;
+      top: -15px;
+      right: 20px;
+    }
+    
+    .cloud2 {
+      width: 150px;
+      height: 50px;
+      top: 30%;
+      right: -180px;
+      animation: cloudMove2 30s linear infinite 5s;
+    }
+    
+    .cloud2::before {
+      width: 60px;
+      height: 60px;
+      top: -25px;
+      left: 20px;
+    }
+    
+    .cloud2::after {
+      width: 45px;
+      height: 45px;
+      top: -20px;
+      right: 25px;
+    }
+    
+    .cloud3 {
+      width: 100px;
+      height: 35px;
+      bottom: 25%;
+      left: -130px;
+      animation: cloudMove3 20s linear infinite 10s;
+    }
+    
+    .cloud3::before {
+      width: 45px;
+      height: 45px;
+      top: -18px;
+      left: 12px;
+    }
+    
+    .cloud3::after {
+      width: 35px;
+      height: 35px;
+      top: -15px;
+      right: 15px;
+    }
+    
+    @keyframes cloudMove1 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 200px)); }
+    }
+    
+    @keyframes cloudMove2 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(-100vw - 250px)); }
+    }
+    
+    @keyframes cloudMove3 {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(calc(100vw + 180px)); }
+    }
+    
+    .mode-toggle{
+      position:absolute;
+      top:20px;
+      right:20px;
+      padding:12px 24px;
+      border:none;
+      border-radius:30px;
+      background:rgba(255,255,255,0.15);
+      color:var(--text-light);
+      font-weight:bold;
+      cursor:pointer;
+      backdrop-filter:blur(10px);
+      transition:all 0.4s;
+      box-shadow:0 4px 15px rgba(0,0,0,0.2);
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .mode-toggle:hover{
+      background:rgba(255,255,255,0.25);
+      transform:translateY(-2px);
+    }
+    .mode-toggle svg{
+      width:18px;
+      height:18px;
+      fill:currentColor;
+    }
+    
+    .contact-info{
+      margin-top:40px;
+      text-align:center;
+      color:var(--text-light);
+      font-size:14px;
+      opacity:0.7;
+      transition:color 0.5s;
+    }
+    
+    @media (max-width: 768px) {
+      .contact-button{
+        width:250px;
+        padding:12px 20px;
+      }
+      .contact-button svg{
+        width:24px;
+        height:24px;
+      }
+      .mode-toggle{
+        top:15px;
+        right:15px;
+        padding:10px 20px;
+        font-size:14px;
+      }
+      .moon, .sun{
+        width:60px;
+        height:60px;
+        top:10%;
+        right:10%;
+      }
+      .cloud1, .cloud2, .cloud3 {
+        transform: scale(0.7);
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .wrap{
+        padding:15px;
+      }
+      h1.title{
+        font-size:32px;
+      }
+      p.contact-text{
+        font-size:16px;
+      }
+      .contact-button{
+        width:220px;
+      }
+      .cloud1, .cloud2, .cloud3 {
+        transform: scale(0.6);
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="sky"></canvas>
+  <div class="moon"></div>
+  <div class="sun"></div>
+  
+  <!-- Bulutlar -->
+  <div class="cloud cloud1"></div>
+  <div class="cloud cloud2"></div>
+  <div class="cloud cloud3"></div>
+  
+  <main class="wrap">
+    <button class="mode-toggle" id="modeToggle">
+      <svg viewBox="0 0 24 24">
+        <path d="M12,11.807C9.349,9.155,8.7,5.261,10.05,2c-1.875,0.37-3.666,1.281-5.12,2.735c-3.905,3.905-3.905,10.237,0,14.142c3.906,3.906,10.237,3.905,14.143,0c1.454-1.454,2.364-3.244,2.735-5.119C18.545,15.106,14.651,14.457,12,11.807z"/>
+      </svg>
+      Kun rejimi
+    </button>
+    
+    <h1 class="title">Men bilan bog'laning</h1>
+    <p class="contact-text">Quyidagi platformalar orqali men bilan bog'lanishingiz mumkin</p>
+    
+    <div class="contact-buttons">
+      <a href="https://t.me/UNIX_General" target="_blank" rel="noreferrer" class="contact-button" style="--button-color: #0088cc;">
+        <div class="button-content">
+          <svg viewBox="0 0 24 24">
+            <path d="M9.036 15.186L8.9 18.756c.322 0 .462-.138.63-.303l1.512-1.458 3.135 2.304c.574.315.983.153 1.14-.528l2.064-9.69c.21-.93-.355-1.29-.915-1.065L4.77 11.115c-.885.345-.87.84-.15 1.065l3.54 1.11 8.22-5.19c.39-.255.75-.114.457.141"/>
+          </svg>
+          <span>Telegram</span>
+        </div>
+        <div class="button-hover">
+          <span>@UNIX_General</span>
+        </div>
+      </a>
+      
+      <a href="https://www.instagram.com/o.s.ozodbek/" target="_blank" rel="noreferrer" class="contact-button" style="--button-color: #E1306C;">
+        <div class="button-content">
+          <svg viewBox="0 0 24 24">
+            <path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm5 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.75a1.25 1.25 0 1 0 0 2.5 1.25 1.25 0 0 0 0-2.5z"/>
+          </svg>
+          <span>Instagram</span>
+        </div>
+        <div class="button-hover">
+          <span>@o.s.ozodbek</span>
+        </div>
+      </a>
+      
+      <a href="tel:+998774166698" class="contact-button" style="--button-color: #10b981;">
+        <div class="button-content">
+          <svg viewBox="0 0 24 24">
+            <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.4 21 3 13.6 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.24.2 2.45.57 3.57a1 1 0 0 1-.24 1.02l-2.2 2.2z"/>
+          </svg>
+          <span>Telefon</span>
+        </div>
+        <div class="button-hover">
+          <span>+998 77 416-66-98</span>
+        </div>
+      </a>
+    </div>
+
+    <div class="contact-info">
+      <p>Tez orada sizga javob beraman</p>
+    </div>
+  </main>
+
+  <script>
+    const canvas = document.getElementById('sky');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let darkMode = true;
+    const starCount = 200;
+    const stars = [];
+
+    function createStars(){
+      stars.length = 0;
+      for(let i=0;i<starCount;i++){
+        stars.push({
+          x:Math.random()*canvas.width, 
+          y:Math.random()*canvas.height, 
+          size: Math.random() * 2 + 1,
+          color: '#ffffff',
+          speed: Math.random() * 0.5 + 0.1,
+          opacity: Math.random() * 0.8 + 0.2,
+          twinkleSpeed: Math.random() * 0.05 + 0.02
+        });
+      }
+    }
+
+    createStars();
+
+    function updateVisuals() {
+      // Background rangini o'zgartiramiz
+      if (darkMode) {
+        document.body.style.background = '#000';
+      } else {
+        // Kun rejimi uchun och ko'k gradient
+        document.body.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+      }
+      
+      // Oy va Quyoshni boshqaramiz
+      const moon = document.querySelector('.moon');
+      const sun = document.querySelector('.sun');
+      
+      if (darkMode) {
+        moon.style.opacity = '1';
+        sun.style.opacity = '0';
+      } else {
+        moon.style.opacity = '0';
+        sun.style.opacity = '1';
+      }
+      
+      // Bulutlarni boshqaramiz
+      const clouds = document.querySelectorAll('.cloud');
+      clouds.forEach(cloud => {
+        cloud.style.opacity = darkMode ? '0' : '0.9';
+      });
+      
+      // Matn ranglarini o'zgartiramiz
+      const textColor = darkMode ? '#fff' : '#fff';
+      document.querySelector('.title').style.color = textColor;
+      document.querySelector('.contact-text').style.color = textColor;
+      document.querySelector('.contact-info').style.color = textColor;
+      
+      const buttons = document.querySelectorAll('.contact-button');
+      buttons.forEach(button => {
+        button.style.color = textColor;
+      });
+    }
+
+    function drawSky(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      
+      // Yulduzlarni chizamiz (faqat tungi vaqtda)
+      if (darkMode) {
+        stars.forEach(s => {
+          // Yulduz miltillashi
+          s.opacity += s.twinkleSpeed;
+          if (s.opacity > 1 || s.opacity < 0.2) {
+            s.twinkleSpeed = -s.twinkleSpeed;
+          }
+          
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+          ctx.fill();
+        });
+      }
+    }
+
+    function animate() {
+      drawSky();
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
+
+    window.addEventListener('resize', ()=>{
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      createStars();
+    });
+
+    const modeBtn = document.getElementById('modeToggle');
+
+    modeBtn.addEventListener('click', ()=>{
+      darkMode = !darkMode;
+      updateVisuals();
+      
+      // Tugma matnini o'zgartiramiz
+      if (darkMode) {
+        modeBtn.innerHTML = `
+          <svg viewBox="0 0 24 24">
+            <path d="M12,11.807C9.349,9.155,8.7,5.261,10.05,2c-1.875,0.37-3.666,1.281-5.12,2.735c-3.905,3.905-3.905,10.237,0,14.142c3.906,3.906,10.237,3.905,14.143,0c1.454-1.454,2.364-3.244,2.735-5.119C18.545,15.106,14.651,14.457,12,11.807z"/>
+          </svg>
+          Kun rejimi
+        `;
+      } else {
+        modeBtn.innerHTML = `
+          <svg viewBox="0 0 24 24">
+            <path d="M12,18c-3.3,0-6-2.7-6-6s2.7-6,6-6s6,2.7,6,6S15.3,18,12,18zM12,8c-2.2,0-4,1.8-4,4c0,2.2,1.8,4,4,4c2.2,0,4-1.8,4-4C16,9.8,14.2,8,12,8z"/>
+            <path d="M12,4c-0.6,0-1-0.4-1-1V1c0-0.6,0.4-1,1-1s1,0.4,1,1v2C13,3.6,12.6,4,12,4z"/>
+            <path d="M12,24c-0.6,0-1-0.4-1-1v-2c0-0.6,0.4-1,1-1s1,0.4,1,1v2C13,23.6,12.6,24,12,24z"/>
+            <path d="M5.6,6.6c-0.3,0-0.5-0.1-0.7-0.3L3.5,4.9c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l1.4,1.4c0.4,0.4,0.4,1,0,1.4C6.1,6.5,5.9,6.6,5.6,6.6z"/>
+            <path d="M19.8,20.8c-0.3,0-0.5-0.1-0.7-0.3l-1.4-1.4c-0.4-0.4-0.4-1,0-1.4s1-0.4,1.4,0l1.4,1.4c0.4,0.4,0.4,1,0,1.4C20.3,20.7,20.1,20.8,19.8,20.8z"/>
+            <path d="M1,13H1c-0.6,0-1-0.4-1-1s0.4-1,1-1h2c0.6,0,1,0.4,1,1s-0.4,1-1,1H1z"/>
+            <path d="M21,13h-2c-0.6,0-1-0.4-1-1s0.4-1,1-1h2c0.6,0,1,0.4,1,1S21.6,13,21,13z"/>
+            <path d="M4.2,20.8c-0.3,0-0.5-0.1-0.7-0.3c-0.4-0.4-0.4-1,0-1.4l1.4-1.4c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-1.4,1.4C4.7,20.7,4.5,20.8,4.2,20.8z"/>
+            <path d="M18.4,6.6c-0.3,0-0.5-0.1-0.7-0.3c-0.4-0.4-0.4-1,0-1.4l1.4-1.4c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4l-1.4,1.4C18.9,6.5,18.7,6.6,18.4,6.6z"/>
+          </svg>
+          Tun rejimi
+        `;
+      }
+    });
+
+    // Dastlabki holatni o'rnatish
+    updateVisuals();
+  </script>
+</body>
+</html>
